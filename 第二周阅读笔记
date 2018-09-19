@@ -1,0 +1,212 @@
+一、
+1.Python目前提供两种字符串插值方法：
+	字符串的'％'运算符。
+	string.Template模块。 
+2.内置的字符串类将获得一个新的方法，'format'，它接受任意数量的位置和关键字参数
+3. 格式字符串由混合字符数据和标记组成。
+4. 简单字段名称可以是名称或数字。如果是数字，它们必须是有效的基数为10的整数; 如果是名称，它们必须是有效的Python标识符。数字用于标识位置参数，而名称用于标识关键字参数。
+5. 格式说明符
+①格式说明符的含义和语法取决于正在格式化的对象的类型，但是有一组标准格式说明符用于不覆盖它们的任何对象。
+②格式说明符本身可以包含替换字段。
+   ③格式说明符的语法是开放式的，因为类可以覆盖标准格式说明符
+6. 如果对象没有定义自己的格式说明符，则使用一组标准格式说明符
+   标准格式说明符的一般形式是：
+[[填补]对准] [符号] [＃] [0] [最小宽度] [精度] [类型]
+
+7. 显式转换标志用于在格式化之前转换格式字段值。这可以用于覆盖特定于类型的格式化行为，并将值格式化为更通用的类型
+8. 每种Python类型都可以通过定义__format__方法来控制其实例的格式。该__format__方法是负责解释格式说明，格式化的值，并返回生成的字符串。
+9. 用户定义的格式
+对于更强大和灵活的格式化，可以通过位于“字符串”模块中的“Formatter”类来获取对底层格式引擎的访问。此类采用无法通过普通str.format方法访问的其他选项。
+应用程序可以继承Formatter类以创建自己的自定义格式化行为。
+PEP不会尝试准确指定Formatter类定义的所有方法和属性; 相反，这些将在初始实施中定义和记录。
+10. 格式化方法
+①'format'是主要的API方法。它需要一个格式模板，以及一组任意的位置和关键字参数。'format'只是一个调用'vformat'的包装器。
+②'vformat'是执行格式化实际工作的函数。对于要传递预定义参数字典的情况，它是作为单独的函数公开的，而不是使用* args和 ** kwds语法将字典解压缩并重新打包为单个参数。'vformat'将格式模板字符串分解为字符数据和替换字段。它会根据需要调用'get_positional'和'get_index'方法
+如：
+Formatter定义了以下可覆盖的方法：
+-  get_value（key，args，kwargs）
+-  check_unused_args（used_args，args，kwargs）
+-  format_field（value，format_spec）
+
+'get_value'用于检索给定的字段值。
+'key'参数可以是整数或字符串。如果它是一个整数，它表示'args'中位置参数的索引; 如果它是一个字符串，那么它代表'kwargs'中的命名参数。
+'args'参数设置为'vformat'的位置参数列表，
+'kwargs'参数设置为位置参数字典。
+'check_unused_args'用于实现对未使用参数的检查
+'format_field'只是调用内置的全局'format'。提供该方法以便子类可以覆盖它。
+10. 自定义Formatter对象的一些典型方法
+ 一个常见的愿望是支持“默认”命名空间，这样就不需要将关键字参数传递给format（） 方法，而是可以使用预先存在的命名空间中的值。这可以通过覆盖get_value（）轻松完成，如
+class NamespaceFormatter（Formatter）：
+   def __init __（self，namespace = {}）：
+       格式化.__的init __（个体经营）
+       self.namespace =名称空间
+
+   def get_value（self，key，args，kwds）：
+       if isinstance（key，str）：
+           尝试：
+               ＃首先检查显式传递的参数
+               返回kwds [关键]
+           除了KeyError：
+               return self.namespace [key]
+       其他：
+           Formatter.get_value（key，args，kwds）
+可以使用它来轻松创建允许访问全局变量的格式化函数，如：
+fmt = NamespaceFormatter（globals（））
+
+greeting =“你好”
+print（fmt.format（“{greeting}，world！”））
+可以使用locals（）字典完成类似的技术以获得对locals字典的访问。
+11. 在格式化过程中可能会出现两类异常：格式化程序代码本身生成的异常，以及用户代码生成的异常
+12. 替代语法
+    Shell变量语法：$ name和$（name）在没有大括号的情况下使用时，变量的长度由词法扫描确定，直到找到无效字符
+   printf及其表兄弟（'％'），包括添加字段索引的变体，以便可以不按顺序插入字段。
+   
+   二、
+   加	a + b	add(a, b)
+级联	seq1 + seq2	concat(seq1, seq2)
+遏制测试	obj in seq	contains(seq, obj)
+师	a / b	truediv(a, b)
+师	a // b	floordiv(a, b)
+按位和	a & b	and_(a, b)
+按位排他或	a ^ b	xor(a, b)
+按位反转	~ a	invert(a),inv(a)
+按位或	a | b	or_(a, b)
+幂	a ** b	pow(a, b)
+身分	a is b	is_(a, b)
+身分	a is not b	is_not(a, b)
+索引分配	obj[k] = v	setitem(obj, k, v)
+索引删除	del obj[k]	delitem(obj, k)
+索引	obj[k]	getitem(obj, k)
+左移	a << b	lshift(a, b)
+模	a % b	mod(a, b)
+乘法	a * b	mul(a, b)
+矩阵乘法	a @ b	matmul(a, b)
+否定（算术）	- a	neg(a)
+否定（逻辑）	not a	not_(a)
+正	+ a	pos(a)
+右转	a >> b	rshift(a, b)
+切片分配	seq[i:j] = values	setitem(seq, slice(i, j), values)
+切片删除	del seq[i:j]	delitem(seq, slice(i, j))
+切片	seq[i:j]	getitem(seq, slice(i, j))
+字符串格式	s % obj	mod(s, obj)
+减法	a - b	sub(a, b)
+真相测试	obj	truth(obj)
+订购	a < b	lt(a, b)
+订购	a <= b	le(a, b)
+平等	a == b	eq(a, b)
+区别	a != b	ne(a, b)
+订购	a >= b	ge(a, b)
+订购	a > b	gt(a, b)
+绝对值	|a|	abs(a)
+
+index() :用于从列表中找出某个值第一个匹配项的索引位置
+map() :会根据提供的函数对指定序列做映射。
+sorted() :函数对所有可迭代的对象进行排序操作
+Itertools.groupb() :groupby()将key函数作用于原循环器的各个元素。根据key					函数结果，将拥有相同函数结果的元素分到一个新的							循环器。每个新的循环器以函数返回结果为标签。
+operator.attrgetter（attr ）:返回一个可调用对象，该对象从其操作数中获取								attr。如果请求了多个属性，则返回属性元组。							    属性名称也可以包含点。
+operator.itemgetter（项目）:返回一个可调用对象，该对象使用操作数的方法从							  其操作数中获取项__getitem__()。如果指定了多								个项，则返回一个查找值元组
+operator.methodcaller（name [，args ... ] ）返回一个可调用对象，该对象在						其操作数上调用方法名称。如果给出了额外的参数和/或关						键字参数，它们也将被赋予该方法
+
+
+iadd（a，b ）	a += b
+iand（a，b ）	a &= b
+operator.iconcat（a，b ）	a += b
+ifloordiv（a，b ）	a //= b
+ilshift（a，b ）	a <<= b
+imod（a，b ）	a %= b
+imul（a，b ）	a *= b
+imatmul（a，b ）	a @= b
+ior（a，b ）	a |= b
+ipow（a，b ）	a **= b
+irshift（a，b ）	a >>= b
+isub（a，b ）	a -= b
+itruediv（a，b ）	a /= b
+ixor（a，b ）	a ^= b
+
+
+三、
+在python中，变量赋值采用对象引用的方式，传递的是一个对象的内存地址（像一个指针）数值型，字符串是不可变对象
+LOAD_NAME:把本地变量相关的值放入堆栈
+LOAD_CONST:把字节码中用到的对应常量放入堆栈
+DUO_TOP_TWO：复制栈顶中前两个引用，并保留顺序。
+由于有序字典会记住其插入顺序，由此它可以与排序结合使用以生成排序字典
+删除条目时，新排序的词典会保持其排序顺序。但是当添加新密钥时，密钥将附加到末尾，并且不会保留排序
+有序字典可以与counter类结合，以便计数器记住第一次遇到的订单元素
+
+四、
+1.Collections.OrderedDict（）
+返回一个dict子类的实例，支持通常的dict 方法。一个OrderedDict是	记住的键首先被插入的顺序的字典。如果新条目覆盖现有条目，则原始插入	位置保持不变。删除条目并重新插入它会将其移至最后。
+OrderedDict对象之间的等式测试是对顺序敏感的，并且实现为list(od1.items())==list(od2.items())。OrderedDict对象和其他 Mapping对象之间的等式测试对常规字典顺序不敏感。这允许OrderedDict在使用常规字典的任何地方替换对象。
+2.OrderedDict.popitem（last = True ）
+popitem()有序字典的方法返回并删除（键，值）对。如果last为真，则以	LIFO顺序返回对，如果为false，则以FIFO顺序返回。
+3.由于有序字典会记住其插入顺序，因此它可以与排序结合使用以生成排序字典
+  删除条目时，新排序的词典会保持其排序顺序。但是，当添加新密钥时，密钥将附加到末尾，并且不会保留排序。
+创建一个有序的字典变体也很简单，它可以记住上次插入密钥的顺序。如果新条目覆盖现有条目，则原始插入位置将更改并移至结尾：
+有序字典可以与Counter类组合，以便计数器记住第一次遇到的订单元素：
+4.
+类collections.Container
+类collections.Hashable
+类collections.Sized
+类collections.Callable
+对于类的ABC分别提供的方法__contains__()， __hash__()，__len__()，和__call__()。
+
+
+类collections.Iterable
+提供__iter__()方法的类的ABC
+
+
+类collections.Iterator
+用于提供__iter__()和 next()方法的类的ABC
+
+
+类collections.Sequence
+类collections.MutableSequence
+ABCs用于只读和可变序列。
+
+
+类collections.Set
+类collections.MutableSet
+用于只读和可变集的ABC。
+
+
+类collections.Mapping
+类collections.MutableMapping
+ABC用于只读和可变映射。
+
+
+类collections.MappingView
+类collections.ItemsView
+类collections.KeysView
+类collections.ValuesView
+用于映射，项目，键和值视图的ABC 。
+
+5.关于使用Set和MutableSet作为混音的说明：
+1.	由于某些集合操作会创建新集合，因此默认的mixin方法需要一种从迭代中创建新实例的方法。假定类构造函数在表单中具有签名ClassName(iterable)。这个假设被分解为一个内部的类方法，调用 _from_iterable()它cls(iterable)来产生一个新的集合。如果Setmixin在具有不同构造函数签名的类中使用，则需要_from_iterable() 使用可以从可迭代参数构造新实例的classmethod 进行覆盖。
+2.	要覆盖比较（据推测为速度，因为语义是固定的），重新定义__le__()和__ge__()，则其他操作会自动效仿。
+3.	Set混入提供了一种_hash()计算用于该组的散列值的方法; 但是，__hash__()未定义，因为并非所有集都是可清除的或不可变的。要使用混入添加集hashability，来自继承Set()和Hashable()，然后再定义 。__hash__ = Set._hash
+
+
+五、
+该关键字def引入了一个函数定义。它必须后跟函数名称和带括号的形式参数列表。构成函数体的语句从下一行开始，并且必须缩进。
+函数中所有变量赋值都将值存储在本地符号表中，而变量的引用首先在本地符号表中查找，然后在封闭函数的本地符号表中查找，然后在全局符号表中查找，最后在内置名称表中查找。由此全局变量名不能直接在函数内赋值（除global语句中命名），尽管可以引用它们。
+该return语句返回一个函数的值，return没有表达式参数返回None，从函数的末尾掉落也会返回None
+该语句result.append(a)调用list对象 的方法result
+默认值仅评估一次。当默认值是可变对象（例如列表，字典或大多数类的实例）时，这会产生差异。
+表单的关键字参数调用函数kwarg=value
+在函数调用中，关键字参数必须遵循位置参数，传递的所有关键字必须与函数接受的参数之一匹配，并且他们的顺序不重要。
+当参数已经在列表或元组中但需要为需要单独位置参数的函数调用解包时，会发生相反的情况。
+可以使用任意数量的参数调用函数。这些函数被包含在一个元组中。
+Lambda关键字可以创建小的匿名函数。此函数返回其两个参数的总和：。Lambda函数可以在需要函数对象的任何地方使用。它们在语法上限于单个表达式。
+ 
+参数注释由参数名称后面的冒号定义，后跟一个表达式，用于评估注释的值。返回注释由->参数列表和表示def语句结尾的冒号之间的文字，后跟表达式定义，用于评估注释的值
+编码风格：
+1. 使用4个空格缩进，没有标签。
+2. 换行，不超过79个字符
+3. 使用空行分隔函数和类，以及函数内较大的代码块
+4. 如果可能将评论放在他们自己的一行上
+5. 使用docstrings（文档字符串）
+6. 在操作符周围和逗号后面使用空格，但不能直接在包围结构中使用
+7. 一致命名您的类和函数
+8. Python默认值，UTF-8甚至ASCII在任何情况下都能最好地工作。
+
+
