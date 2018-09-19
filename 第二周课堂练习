@@ -1,0 +1,83 @@
+1.
+'hello world'.replace('l','*')
+    
+2.
+'good!' *3
+'good!+ 'good!'+'good!'
+
+
+3.
+'Fh1qoWe92QbvC'.swapcase()
+
+
+4.
+nums = []
+for c in 'Fh1qoWe92QbvC':
+    if c.isdigit():
+        nums.append(c)
+print(''.join(nums))
+
+
+5.
+lst=[2,0,3,6,9]
+lst
+sorted(lst)
+
+6.
+l=[2,3,1,2,4,3]
+l2=[]
+for i in l:
+    if not i in l2:
+        l2.append(i)
+porint l2
+
+7.
+string = 'aasdebbcaa'
+d_counter ={}
+for c in set(string):
+    d_counter[c]=string.count(c)
+d_counter
+
+8.
+def count_n(s):
+    num=0
+    alpha=0
+    blank=0
+    other=0
+    for i in s:
+        if i.isdigit():
+            num +=1
+        elif i.isalpha():
+            alpha += 1;
+        elif i==' ':
+            blank +=1
+        else:
+            other +=1
+    result='共有数字{}个，字母{}个空格{}个，其他{}个'.format (num,alpha,blank,other)
+    return(result)
+print(count_n(' ssssss66@'))
+
+
+9.
+a='hel lo  wo rld'
+a=''.join(a.split())
+print(a)
+
+10.
+import random
+right = random.randint(1,100)
+print('------猜数字游戏！-----')
+------猜数字游戏！-----
+number = 0
+while number != right:
+    number = int(input('猜数字游戏开始，请输入数字：'))
+        if number > right:
+            print('您输入的数字大了！')
+        else:
+            print('您输入的数字小了！')
+        if number == right:
+            print('恭喜，您猜对了！')
+            print('游戏结束，再见！')
+
+
+
